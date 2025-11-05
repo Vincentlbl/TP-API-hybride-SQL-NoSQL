@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8" />
+    <title>API Hybride SQL + NoSQL Demo</title>
+</head>
+
+<body>
+
+    <h2>API Hybride SQL + NoSQL</h2>
+
+    <button onclick="fetchUsers()">Users (SQL)</button>
+    <button onclick="fetchBooks()">Books (SQL)</button>
+    <button onclick="fetchProfiles()">Profiles (MongoDB)</button>
+    <input id="uid" placeholder="User ID" value="1" />
+    <button onclick="fetchHybrid()">Full User (Hybrid)</button>
+
+    <h3>Résultat :</h3>
+    <pre id="output">Sélectionnez un bouton...</pre>
+
+    <script>
+        const base = "http://localhost:3000/api";
+
+        function updateURL(path) {
+            window.history.pushState({}, "", path);
+        }
+
+        function show(data) {
+            document.getElementById("output").textContent = JSON.stringify(data, null, 2);
+        }
+
+        // SQL
+        async function fetchUsers() {
+            updateURL("/users");
+            const r = await fetch(`${base}/users`);
+            show(await r.json());
+        }
+
+        // SQL
+        async function fetchBooks() {
+            updateURL("/books");
+            const r = await fetch(`${base}/books`);
+            show(await r.json());
+        }
+
+        // MongoDB
+        async function fetchProfiles() {
+            updateURL("/profiles");
+            const r = await fetch(`${base}/profiles`);
+            show(await r.json());
+        }
+
+        // SQL + noSQL
+        async function fetchHybrid() {
+            const id = document.getElementById("uid").value;
+            updateURL(`/users/full/${id}`);
+            const r = await fetch(`${base}/users/full/${id}`);
+            show(await r.json());
+        }
+    </script>
+</body>
+
+</html>
+
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        padding: 20px;
+        background: #000;
+        color: #fff;
+    }
+
+    button {
+        margin: 5px;
+        padding: 10px;
+        border: 1px solid #fff;
+    }
+
+    input {
+        padding: 10px;
+        margin: 5px;
+        color: #fff;
+        background: #333;
+        border: 1px solid #fff;
+    }
+
+    pre {
+        color: #fff;
+        padding: 15px;
+        border: 1px solid #fff;
+    }
+</style>
